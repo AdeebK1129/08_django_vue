@@ -1,3 +1,4 @@
+<<<<<<< HEAD:recipe_maker_vue/src/App.vue
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
@@ -45,3 +46,33 @@ header {
   }
 }
 </style>
+=======
+<template>
+
+</template>
+
+<script>
+export default {
+name: "App",
+    components: {
+
+    },
+
+    data() {
+        return {
+        
+        
+        }
+    },
+    
+    methods: {
+
+    },
+    
+    computed: {
+    },
+}
+
+
+</script>
+>>>>>>> joDis06:vue-project/src/App.vue
