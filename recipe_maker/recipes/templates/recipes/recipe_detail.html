@@ -1,22 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<a href="{% url 'recipes:recipe_list' %}">Recipe List</a><br/>
+<a href="{% url 'recipes:recipe_list' %}">Recipes list</a><br/>
+<a href="{% url 'recipes:ingredient_list' %}">Ingredients list</a><br/>
+<a href="{% url 'recipes:recipe_update' object.id %}">Update Recipe</a><br/>
 <a href="{% url 'recipes:recipe_delete' object.id %}">Delete Recipe</a><br/>
 <h1>{{ object.name }}</h1>
-    Ingredients:
-    <br/>
-    for actor in object.actors.all 
-    recipe.name
+Ingredients:<br/>
+{% for ingredient in object.ingredients.all %}
+{{ingredient.name}}<br/>
 <br/>
-<br/>
-Food Description:
-<br>
-text
-<br/><br>
-Recipe:
-<br>
-text
-<br/><br>
-endfor 
+Name: {{object.name}}<br/> 
+Description: {{object.foodDescription}}<br/>
+Recipe: {{object.recipe}}<br/>
+{% endfor %}
 {% endblock content %}
