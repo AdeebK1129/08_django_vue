@@ -18,7 +18,7 @@ class Recipe(models.Model):
     recipe = models.CharField(max_length=500)
     
     class Meta:
-        ordering = ['name'] 
+        ordering = ['name']
         
     
         
