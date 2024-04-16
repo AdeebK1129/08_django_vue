@@ -94,6 +94,7 @@ class RecipeCreateView(CreateView):
                 recipe_name=self.object.name))
         return response
     
+    
 # comment the following line to show the error about not having an
 # success_url
     def get_success_url(self):
