@@ -19,7 +19,7 @@ from .forms import RecipeForm
 ## Ingredients
 
 class IngredientListView(LoginRequiredMixin, ListView):
-    model = Recipe
+    model = Ingredient
 
 class IngredientCreateView(CreateView):
     model = Ingredient
@@ -34,7 +34,7 @@ class IngredientCreateView(CreateView):
         return response
 
     def get_success_url(self):
-    	return reverse_lazy("recipes:recipe_detail", args=[self.object.id])
+    	return reverse_lazy("recipes:ingredient_detail", args=[self.object.id])
     
 class IngredientDetailView(DetailView):
     model = Ingredient
@@ -70,7 +70,7 @@ class IngredientDeleteView(DeleteView):
         messages.add_message(
             self.request, messages.SUCCESS,
             'Ingredient "{ingredient_name}" has been deleted'.format(
-                actor_name=self.object.name))
+                ingredient_name=self.object.name))
         return response
     
 
@@ -93,6 +93,13 @@ class RecipeCreateView(CreateView):
             'Recipe "{recipe_name}" has been created'.format(
                 recipe_name=self.object.name))
         return response
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["ingredient_list"] = ingredient_list
+        print("context", context)
+        return context
+    
     
     
 # comment the following line to show the error about not having an
