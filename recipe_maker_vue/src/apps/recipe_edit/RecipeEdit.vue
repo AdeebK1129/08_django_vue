@@ -11,10 +11,21 @@
                 <label for="id_name">Recipe Name:</label>
                 <input type="text" maxlength="100" required="" id="id_name">
             </p>
+            
+            <p>
+                <label for="id_ingredients">Ingredients:</label><br>
+				<multiselect type="hidden" v-model="ingredient_list" name="ingredients" required="" id="id_ingredients" :options="ingredient_list_source" multiple="" label="name" track-by="name" >
+				</multiselect>
+            </p>
 
             <p>
-                <label for="id_director">Food Description:</label>
+                <label for="id_food_description">Food Description:</label>
                 <input type="text" maxlength="500" required="" id="id_food_description">
+            </p>
+
+            <p>
+                <label for="id_recipe">Recipe:</label>
+                <input type="text" maxlength="500" required="" id="id_recipe">
             </p>
 
                 <button type="submit" class="btn btn-primary">
@@ -26,128 +37,72 @@
 </template>
 
 <script>
+import Multiselect from 'vue-multiselect'
+
 export default {
     name: 'App',
   components: {
+    Multiselect
   },
   props: [
   ],
   data: function() {
     return {
         csrf_token: ext_csrf_token,
+        form: ext_form,
+        recipe_dico: ext_recipe_dict,
+        ingredient_list_source: ext_ingredient_list,
+        ingredient_list: ext_recipe_dict.ingredients,
+        submitting_form: false,
+        form_error: [],
+        form_updated: "",
 
-        // csrf_token: ext_csrf_token,
-	    // 	update_bis_url: ext_update_bis_url,
-	    // 	form: ext_form,
-	    // 	movie_dico: ext_movie_dict,
-	    // 	actor_list_source: ext_actor_list,
-	    // 	date: this.init_date(ext_movie_dict.release_date),
-	    // 	time: this.init_time(ext_movie_dict.running_time),
-	    // 	actor_list: ext_movie_dict.actors,
-	    // 	submitting_form: false,
-	    // 	form_error: [],
-	    // 	form_updated: "",
     }
   },
   computed: {
   },
   methods: {
-
-//      submit_form(){
-//             if (this.submitting_form === true) {
-//             return;
-//             }
-//             this.submitting_form = true
-//             var form = document.createElement('form');
-//             form.setAttribute('method', 'post');
-//             let form_data = {
-//                 'csrfmiddlewaretoken': this.csrf_token,
-//                 'name': this.movie_dico.name,
-//                 'running_time': this.get_time_string,
-//                 'director': this.movie_dico.director,
-//                 'release_date': this.get_date_string,
-//             }
-//             console.log('actor_list', this.actor_list)
-//             console.log("form_data", form_data)
-//             for (var key in form_data) {
-//                 var html_field = document.createElement('input')
-//                 html_field.setAttribute('type', 'hidden')
-//                 html_field.setAttribute('name', key)
-//                 html_field.setAttribute('value', form_data[key])
-//                 form.appendChild(html_field)
-//             }
-//             var actor_field = document.createElement('select')
-//             actor_field.setAttribute('name', 'actors')
-//             actor_field.setAttribute('id', 'id_actors')
-//             actor_field.setAttribute('multiple', '')
-//             for (var actor of this.actor_list) {
-//                 console.log('actor', actor)
-//                 var option_field = document.createElement('option')
-//                 option_field.setAttribute('value', actor.id)
-//                 option_field.setAttribute('selected', '')
-//                 actor_field.appendChild(option_field)
-//             }
-//             form.appendChild(actor_field)
-//             document.body.appendChild(form);
-//             form.submit()
-//         },
-
-//         submit_form_fetch(){
-//         	this.form_error = []
-//         	this.form_updated = ""
-//         	let formData = new FormData();
-//         	let form_data = {
-// 	            	'name': this.movie_dico.name,
-// 	            	'running_time': this.get_time_string,
-// 	            	'director': this.movie_dico.director,
-// 	            	'release_date': this.get_date_string,
-//         	}
-//         	for (var key in form_data) {
-//             		formData.append(key, form_data[key])
-//         	}
-//         	this.actor_list.map(dic => formData.append('actors', dic.id))
-//         	fetch(this.update_bis_url,
-//             	{
-//                 	method: "post",
-//                 	body: formData,
-//                 	headers: {'X-CSRFToken': this.csrf_token},
-//                 	credentials: 'same-origin'
-//             	}
-//         	).then(function(response) {
-//             	console.log('response', response)
-//             	return response.json()}).then(
-// 	            	this.handleResponse).catch(
-// 	                	(error) => {
-// 	                	console.log('error', String(error))
-// 	                	this.form_error=["error"]
-//     			})
-//     	},
-//     	handleResponse(response) {
-//         	console.log('json response', response)
-//         	if ('success' in response){
-// 	            	if (response['success'] == true) {
-// 	                	this.form_updated = "Movie has been updated"
-// 	            	} else {
-// 	                	if ('errors' in response){
-// 		                    	for (const [key, value] of Object.entries(response['errors'])) {
-// 		                        	for (const error of value) {
-// 		                            		this.form_error.push(`${key}: ${error}`)
-// 		                        	}
-// 	                    		}
-// 	                	} else {
-// 	                    		this.form_error=["Update failed - An error occurred but do not have more information about it"]
-// 	                	}
-// 	            	}
-// 		} else {
-// 	            	this.form_error=["Update failed - It has been an error on the form request"]
-// 		}
-//     	}
-//     },
-//   },
+    submit_form(){
+            if (this.submitting_form === true) {
+                return;
+            }
+            this.submitting_form = true
+            var form = document.createElement('form');
+            form.setAttribute('method', 'post');
+            let form_data = {
+                'csrfmiddlewaretoken': this.csrf_token,
+                'name': this.recipe_dico.name,
+                'foodDescription': this.recipe_dico.foodDescription,
+                'recipe': this.recipe_dico.recipe,
+            }
+            console.log('ingredient_list', this.ingredient_list)
+            console.log("form_data", form_data)
+            for (var key in form_data) {
+                var html_field = document.createElement('input')
+                html_field.setAttribute('type', 'hidden')
+                html_field.setAttribute('name', key)
+                html_field.setAttribute('value', form_data[key])
+                form.appendChild(html_field)
+            }
+            var ingredient_field = document.createElement('select')
+            ingredient_field.setAttribute('name', 'ingredients')
+            ingredient_field.setAttribute('id', 'id_ingredients')
+            ingredient_field.setAttribute('multiple', '')
+            for (var ingredient of this.ingredient_list) {
+                console.log('ingredient', ingredient)
+                var option_field = document.createElement('option')
+                option_field.setAttribute('value', ingredient.id)
+                option_field.setAttribute('selected', '')
+                ingredient_field.appendChild(option_field)
+            }
+            form.appendChild(ingredient_field)
+            document.body.appendChild(form);
+            form.submit()
+        },
   },
   watch: {
   }
 }
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 

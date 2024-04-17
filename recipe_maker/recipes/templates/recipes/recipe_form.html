@@ -13,6 +13,9 @@
   {{ block.super }}
   <script>
     var ext_csrf_token = '{{ csrf_token }}';
+    var ext_form = `{{ form.as_p | safe}}`;
+    var ext_recipe_dict = '{{ recipe_dict | safe }}';
+    var ext_ingredient_list = '{{ ingredient_list | safe }}';
   </script>
   {% vite_hmr_client %}
   {% vite_asset 'src/apps/recipe_edit/recipe_edit.js' type="module" %}
