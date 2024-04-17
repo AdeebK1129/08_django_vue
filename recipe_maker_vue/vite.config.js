@@ -3,7 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
-const backendPath = '../movie_theater';
+const backendPath = '../recipe_maker';
 
 // https://vitejs.dev/config/
 export default defineConfig({
