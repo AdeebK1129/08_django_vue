@@ -20,4 +20,10 @@ urlpatterns = [
          name="recipe_update"),
     path("recipes/delete/<int:pk>", views.RecipeDeleteView.as_view(),
          name="recipe_delete"),
+    path("recipes/update_bis/<int:pk>", views.RecipeUpdatebisView.as_view(), 
+         name="recipe_update_bis",),
+    path("recipes/bis/<int:pk>", views.RecipeDetailbisView.as_view(), 
+         name="recipe_detail_bis",),
+    path("recipes/js/<int:pk>", views.RecipeDetailJsView.as_view(),
+          name="recipe_detail_js",),
 ]

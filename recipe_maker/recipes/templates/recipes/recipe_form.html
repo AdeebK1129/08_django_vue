@@ -1,24 +1,34 @@
 {% extends "base.html" %}
 {% load django_vite %}
-
+{% block head %}
+    <script type="text/javascript">
+        ext_csrf_token="{{csrf_token}}"; {# double quotes are important#}
+        ext_tag_list = "{{ ingredient_list | safe }}";
+    </script>
+{% endblock head%}
 {% block content %}
+<a href="{% url 'recipes:recipe_list' %}">Recipes list</a><br/>
+<a href="{% url 'recipes:ingredient_create' %}">New Ingredient</a><br/>
 
-<br><br>
-<div id="app"> 
-    
-</div>
-
+    {% comment %} <form method="post">    {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>   {% endcomment %}
+    <div id="appcreate">
+        <div token="{{csrf_token}}"></div>
+        <appcreate></appcreate>
+    </div>
 {% endblock content %}
 
 {% block js %}
-  {{ block.super }}
-  <script>
-    var ext_csrf_token = '{{ csrf_token }}';
-    var ext_form = `{{ form.as_p | safe }}`;
-    var ext_recipe_dict = {{ recipe_dict | safe }}
-    var ext_ingredient_list = {{ ingredient_list | safe }}
-  </script>
-  {% vite_hmr_client %}
-  {% vite_asset 'src/apps/recipe_edit/recipe_edit.js' type="module" %}
+    {{ block.super }}
+    <script>
+        var ext_csrf_token = "{{ csrf_token }}"
+        {% comment %} var ext_form = `{{form.as_p | safe}}` {% endcomment %}
+        {% comment %} var ext_reminder_dict = {{ reminder_dict | safe }} {% endcomment %}
+        {% comment %} var ext_tag_list = {{ tag_list | json_script:"tag_list" }}  {% endcomment %}
+        var ext_ingredient_list = {{ ingredient_list | safe }}
+    </script>
+    {% vite_hmr_client %}
+    {% vite_asset 'src/apps/recipe_create/recipe_create.js' %} 
 {% endblock js %}
-

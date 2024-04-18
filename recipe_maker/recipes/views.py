@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
@@ -18,12 +20,16 @@ from .forms import RecipeForm
 
 ## Ingredients
 
-class IngredientListView(LoginRequiredMixin, ListView):
-    model = Recipe
+class IngredientListView(ListView):
+    model = Ingredient
+
+
+class IngredientDetailView(DetailView):
+    model = Ingredient
 
 class IngredientCreateView(CreateView):
     model = Ingredient
-    fields = ['name']
+    fields = ["name"]
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -34,14 +40,11 @@ class IngredientCreateView(CreateView):
         return response
 
     def get_success_url(self):
-    	return reverse_lazy("recipes:recipe_detail", args=[self.object.id])
-    
-class IngredientDetailView(DetailView):
-    model = Ingredient
+    	return reverse_lazy("recipes:ingredient_detail", args=[self.object.id])
 
 class IngredientUpdateView(UpdateView):
     model = Ingredient
-    fields = ['name']
+    fields = ["name"]
     
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -51,16 +54,9 @@ class IngredientUpdateView(UpdateView):
                 ingredient_name=self.object.name))
         return response
     
-    # comment the following line to show the error about not having an
-    # success_url
     def get_success_url(self):
         return reverse_lazy("recipes:ingredient_detail", args=[self.object.id])
-        # you can also use it this way with kwargs, just to let you know
-        # but here we have only one argument, so no mistake can be done
-        #return reverse_lazy("movies:actor_detail",
-        #                    kwargs={'pk':self.object.id})
     
-
 class IngredientDeleteView(DeleteView):
     model = Ingredient
     success_url = reverse_lazy("recipes:ingredient_list")
@@ -72,19 +68,22 @@ class IngredientDeleteView(DeleteView):
             'Ingredient "{ingredient_name}" has been deleted'.format(
                 actor_name=self.object.name))
         return response
-    
 
-# Recipes 
-    
-class RecipeListView(LoginRequiredMixin, ListView):
+
+# Recipes
+
+class RecipeListView(ListView):
     model = Recipe
+
 
 class RecipeDetailView(DetailView):
     model = Recipe
 
+
 class RecipeCreateView(CreateView):
     model = Recipe
-    form_class = RecipeForm
+    # form_class = RecipeForm
+    fields = ["name", "ingredients", "foodDescription", "recipe" ]
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -94,47 +93,50 @@ class RecipeCreateView(CreateView):
                 recipe_name=self.object.name))
         return response
     
-    
-# comment the following line to show the error about not having an
-# success_url
+    # comment the following line to show the error about not having an
+    # success_url
     def get_success_url(self):
         return reverse_lazy("recipes:recipe_detail", args=[self.object.id])
-    # you can also use it this way with kwargs, just to let you know
-    # but here we have only one argument, so no mistake can be done
-    #return reverse_lazy("movies:actor_detail",
-    #                    kwargs={'pk':self.object.id})
+    
+    def get_context_data(self, **kwargs):
+       context = super().get_context_data(**kwargs)
+       ingredient_list = list(Ingredient.objects.all().values())
+       context["ingredient_list"] = ingredient_list
+       context["ingredient_list"] = json.dumps(ingredient_list)
+       print("context", context)
+       return context
 
 class RecipeUpdateView(UpdateView):
     model = Recipe
-    form_class = RecipeForm
-
+    template_name_suffix = '_edit'
+    fields = ["name", "ingredients", "foodDescription", "recipe" ]
+    
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            f'Recipe "{self.object.name}" has been updated'
-        )
+            self.request, messages.SUCCESS,
+            'Recipe "{recipe_name}" has been updated'.format(
+                recipe_name=self.object.name))
         return response
-
+    
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        recipe_dico = model_to_dict(self.object)
-        ingredients = recipe_dico["recipes"]
-        recipe_ingredient_list = [{"id": recipe.id, "name": recipe.name} for recipe in recipes]
-        recipe_dico["ingredients"] = recipe_ingredient_list
-        ingredient_list = list(Ingredient.objects.all().values())
-        context["recipe_dict"] = recipe_dico
-        context["ingredient_list"] = ingredient_list
-        print("context", context)
-        return context
-
+       context = super().get_context_data(**kwargs)
+       recipe_dico = model_to_dict(self.object)
+       ingredients = recipe_dico["ingredients"]
+       recipe_ingredient_list = []
+       for ingredient in ingredients:
+           recipe_ingredient_list.append({"id": ingredient.id, "name": ingredient.name})
+       recipe_dico["ingredients"] = json.dumps(recipe_ingredient_list)
+       ingredient_list = list(Ingredient.objects.all().values())
+       context["recipe_dict"] = json.dumps(recipe_dico)
+       context["ingredient_list"] = json.dumps(ingredient_list)
+       print("context", context)
+       return context
+    
+    # comment the following line to show the error about not having an
+    # success_url
     def get_success_url(self):
         return reverse_lazy("recipes:recipe_detail", args=[self.object.id])
-        # You can also use it this way with kwargs, just to let you know
-        # but here we have only one argument, so no mistake can be done
-        # return reverse_lazy("movies:actor_detail", kwargs={'pk': self.object.id})
-
 
 class RecipeDeleteView(DeleteView):
     model = Recipe
@@ -147,3 +149,34 @@ class RecipeDeleteView(DeleteView):
             'Recipe "{recipe_name}" has been deleted'.format(
                 recipe_name=self.object.name))
         return response
+    
+class RecipeUpdatebisView(View):
+    def post(self, request, *args, **kwargs):
+       recipe = get_object_or_404(Recipe, pk=self.kwargs["pk"])
+       # Create a form instance with POST data
+       form = RecipeForm(request.POST, instance=recipe)
+       if form.is_valid():
+           form.save()
+           return JsonResponse({"success": True})
+       else:
+           return JsonResponse({"success": False, "errors": form.errors})
+    
+class RecipeDetailbisView(TemplateView):
+    template_name = "recipes/recipe_detailbis.html"
+    def get(self, request, *args, **kwargs):
+        recipe = get_object_or_404(Recipe, pk=self.kwargs["pk"])
+        return super().get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipe_id'] = self.kwargs["pk"]
+        return context
+    
+class RecipeDetailJsView(View):
+    def get(self, request, *args, **kwargs):
+        recipe = get_object_or_404(Recipe, pk=self.kwargs["pk"])
+        recipe_js = model_to_dict(recipe)
+        recipe_js["ingredients"] = []
+        for ingredient in recipe.ingredients.values():
+            recipe_js["ingredients"].append(ingredient)
+        return JsonResponse({"recipe": recipe_js})
+
