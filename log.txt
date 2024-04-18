@@ -1,0 +1,26 @@
+April 9 
+Adeeb: Initalized Django apps and project directories
+Joseph: Began working on User Authorization
+
+April 11
+Adeeb: Initalized Node and Vue directories and files; Designed database diagram
+Joseph: Initalized views and models based off of database diagram; Fininished basic User Authentication system
+
+April 12
+Adeeb & Joseph: Addressing Git issues and merge conflicts 
+
+April 13-15
+Adeeb: Set up views and templates for Recipes and Ingredients models (create, update, delete, list, detail, etc.)
+Joseph: Set up Vue forms and data transfers between Django and Vue
+
+April 16
+Adeeb: Finished first version of views; no data transfers yet
+Joseph: Got a basic nonfunctional Vue form to show up on front end
+
+April 17 
+Sever issues with transferring data from Django to Vue (undefined errors, empty string dictionaries, etc.)
+Adeeb & Joseph: Attempted to debug this issue but same error persisted
+
+April 18: 
+Adeeb (with help from Tyler Chan) : Modified views to properly transfer data to create and edit forms; Added RecipeCreate and RecipeShow vue files to process data passed from djang to Vue; Successfully implemented all major create update and delete functionaities; Successfully implemented Vue Multiselect; Able to confirm CRUD successes in PGAdmin
+Joseph: Began updating homepage 
