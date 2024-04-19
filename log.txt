@@ -4,7 +4,7 @@ Joseph: Began working on User Authorization
 
 April 11
 Adeeb: Initalized Node and Vue directories and files; Designed database diagram
-Joseph: Initalized views and models based off of database diagram; Fininished basic User Authentication system
+Joseph: Initalized views and models based off of database diagram; Finished basic User Authentication system
 
 April 12
 Adeeb & Joseph: Addressing Git issues and merge conflicts 
@@ -23,4 +23,4 @@ Adeeb & Joseph: Attempted to debug this issue but same error persisted
 
 April 18: 
 Adeeb (with help from Tyler Chan) : Modified views to properly transfer data to create and edit forms; Added RecipeCreate and RecipeShow vue files to process data passed from djang to Vue; Successfully implemented all major create update and delete functionaities; Successfully implemented Vue Multiselect; Able to confirm CRUD successes in PGAdmin
-Joseph: Began updating homepage 
+Joseph: Fixed any leftover errors with Deleting Ingredients / Recipes. Finished Homepage with instructions.

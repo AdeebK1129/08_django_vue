@@ -66,7 +66,7 @@ class IngredientDeleteView(DeleteView):
         messages.add_message(
             self.request, messages.SUCCESS,
             'Ingredient "{ingredient_name}" has been deleted'.format(
-                actor_name=self.object.name))
+                ingredient_name=self.object.name))
         return response
 
 

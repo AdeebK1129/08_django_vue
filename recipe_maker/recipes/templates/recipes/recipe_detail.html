@@ -9,9 +9,15 @@
 Ingredients:<br/>
 {% for ingredient in object.ingredients.all %}
     {{ingredient.name}}<br/>
-    <br/>
-    Name: {{ingredient.name}}<br/> 
-    Description: {{ingredient.foodDescription}}<br/>
-    Recipe: {{ingredient.recipe}}<br/>
 {% endfor %}
+
+<br>
+
+Food Description:<br>
+{{ object.foodDescription }}
+
+<br><br>
+
+Recipe:<br>
+{{ object.recipe }}
 {% endblock content %}
