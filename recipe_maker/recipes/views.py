@@ -93,23 +93,12 @@ class RecipeCreateView(CreateView):
             'Recipe "{recipe_name}" has been created'.format(
                 recipe_name=self.object.name))
         return response
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["ingredient_list"] = ingredient_list
-        print("context", context)
-        return context
-    
-    
+
     
 # comment the following line to show the error about not having an
 # success_url
     def get_success_url(self):
         return reverse_lazy("recipes:recipe_detail", args=[self.object.id])
-    # you can also use it this way with kwargs, just to let you know
-    # but here we have only one argument, so no mistake can be done
-    #return reverse_lazy("movies:actor_detail",
-    #                    kwargs={'pk':self.object.id})
 
 class RecipeUpdateView(UpdateView):
     model = Recipe
@@ -127,8 +116,8 @@ class RecipeUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         recipe_dico = model_to_dict(self.object)
-        ingredients = recipe_dico["recipes"]
-        recipe_ingredient_list = [{"id": recipe.id, "name": recipe.name} for recipe in recipes]
+        ingredients = recipe_dico["ingredients"]
+        recipe_ingredient_list = [{"id": ingredient.id, "name": ingredient.name} for ingredient in ingredients]
         recipe_dico["ingredients"] = recipe_ingredient_list
         ingredient_list = list(Ingredient.objects.all().values())
         context["recipe_dict"] = recipe_dico
@@ -138,9 +127,6 @@ class RecipeUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("recipes:recipe_detail", args=[self.object.id])
-        # You can also use it this way with kwargs, just to let you know
-        # but here we have only one argument, so no mistake can be done
-        # return reverse_lazy("movies:actor_detail", kwargs={'pk': self.object.id})
 
 
 class RecipeDeleteView(DeleteView):
