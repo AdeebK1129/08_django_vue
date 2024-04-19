@@ -8,24 +8,33 @@
             <input type="hidden" name="csrfmiddlewaretoken"
                    v-bind:value="csrf_token">
             <p>
-                <label for="id_name">Recipe Name:</label>
-                <input type="text" maxlength="100" required="" id="id_name">
+                <label for="id_name">Recipe Title: </label> &nbsp;
+                <input type="text" name="name" v-model="title" maxlength="100"
+                required="" id="id_name">
             </p>
             
             <p>
-                <label for="id_ingredients">Ingredients:</label><br>
-				<multiselect type="hidden" v-model="ingredient_list" name="ingredients" required="" id="id_ingredients" :options="ingredient_list_source" multiple="" label="name" track-by="name" >
-				</multiselect>
+                <label for="id_ingredients">Ingredients:</label>
+                <select hidden name="ingredients"  id="id_ingredients" multiple="">
+                    <option v-for="ingredient in ingredient_list" :value="ingredient.id" selected=""></option>
+                </select>
+                <multiselect v-model="ingredient_list" :options="ingredient_list_source" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Choose the ingredients" label="name" track-by="name" :preselect-first="true" style="display:inline-block;width: 300px;padding-bottom:10px;padding-left:10px">
+                    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length" v-show="!isOpen">{{ values.length }} options selected</span></template>
+                </multiselect>
             </p>
 
             <p>
-                <label for="id_food_description">Food Description:</label>
-                <input type="text" maxlength="500" required="" id="id_food_description">
+                <label for="id_foodDescription">Description: </label>&nbsp;
+                <input type="hidden" :value="foodDescription" name="foodDescription" value=""
+                maxlength="5000" required="" id="id_foodDescription"  >
+                <textarea v-model="foodDescription" name="foodDescription" cols="50" maxlength="5000" rows="3"> </textarea>
             </p>
 
             <p>
-                <label for="id_recipe">Recipe:</label>
-                <input type="text" maxlength="500" required="" id="id_recipe">
+                <label for="id_recipe">Recipe: </label>&nbsp;
+                <input type="hidden" :value="recipe" name="recipe" value=""
+                maxlength="5000" required="" id="id_recipe"  >
+                <textarea v-model="recipe" name="recipe" cols="50" maxlength="5000" rows="3"> </textarea>
             </p>
 
                 <button type="submit" class="btn btn-primary">
@@ -51,15 +60,26 @@ export default {
         csrf_token: ext_csrf_token,
         form: ext_form,
         recipe_dico: ext_recipe_dict,
-        ingredient_list_source: ext_ingredient_list,
-        ingredient_list: ext_recipe_dict.ingredients,
+        title: ext_recipe_dict.name,
+        foodDescription: ext_recipe_dict.foodDescription,
+        recipe: ext_recipe_dict.recipe,
+        ingredient_list_source: (ext_ingredient_list != undefined) ? ext_ingredient_list: [],
         submitting_form: false,
         form_error: [],
         form_updated: "",
-
+        foodDescription: ext_recipe_dict.foodDescription,
+        update_bis_url: ext_update_bis_url,
+        ingredient_list: (ext_recipe_dict.ingredients != undefined && ext_recipe_dict.ingredients != null) ? ext_recipe_dict.ingredients : [],
     }
   },
   computed: {
+    onLoad() {
+        console.log("hello");
+        console.log(this.ingredient_list_source);
+        console.log(this.ingredient_list);
+        console.log(this.recipe_dico);
+        console.log(this.csrf_token)
+    }
   },
   methods: {
     submit_form(){
@@ -102,8 +122,12 @@ export default {
 
         
   },
-  watch: {
-  }
+  mounted(){
+            this.csrf_token=ext_csrf_token;
+            this.recipe_dico=ext_recipe_dict;  
+            this.ingredient_list_source= ext_ingredient_list;
+            this.ingredient_list = JSON.parse(ext_recipe_dict.ingredients);
+    },
 }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -10,7 +10,11 @@
 {% block js %}
     {{ block.super }}
     <script>
-       // stuff
+        var ext_recipe_id = {{ recipe_id }}
+        var ext_recipe_detail_js_url = '{% url 'recipes:recipe_detail_js' recipe_id %}'
+        var ext_recipe_list_url = '{% url 'recipes:recipe_list'  %}'
+        var ext_recipe_update_url = '{% url 'recipes:recipe_update' recipe_id %}'
+        var ext_recipe_delete_url = '{% url 'recipes:recipe_delete' recipe_id %}'
     </script>
-    <!-- {% vite_asset 'src/apps/recipe_show/recipe_show.js' %} -->
+{% vite_asset 'src/apps/recipe_show/recipe_show.js' %} 
 {% endblock js %}

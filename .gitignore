@@ -4,5 +4,5 @@ secrets.json
 .DS_Store
 .python-version
 recipe_maker/db.sqlite3
-recipe_maker/recipe_maker/__pycache__/urls.cpython-311.pyc
-recipe_maker/recipe_maker/__pycache__/wsgi.cpython-311.pyc
+node_modules
+
