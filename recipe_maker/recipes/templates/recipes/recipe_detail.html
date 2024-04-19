@@ -8,10 +8,16 @@
 <h1>{{ object.name }}</h1>
 Ingredients:<br/>
 {% for ingredient in object.ingredients.all %}
-{{ingredient.name}}<br/>
-<br/>
-Name: {{object.name}}<br/> 
-Description: {{object.foodDescription}}<br/>
-Recipe: {{object.recipe}}<br/>
+    {{ingredient.name}}<br/>
 {% endfor %}
+
+<br>
+
+Food Description:<br>
+{{ object.foodDescription }}
+
+<br><br>
+
+Recipe:<br>
+{{ object.recipe }}
 {% endblock content %}

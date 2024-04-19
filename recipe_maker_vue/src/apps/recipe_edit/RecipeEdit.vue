@@ -119,6 +119,8 @@ export default {
             document.body.appendChild(form);
             form.submit()
         },
+
+        
   },
   mounted(){
             this.csrf_token=ext_csrf_token;
