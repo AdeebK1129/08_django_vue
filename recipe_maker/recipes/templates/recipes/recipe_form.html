@@ -2,18 +2,13 @@
 {% load django_vite %}
 {% block head %}
     <script type="text/javascript">
-        ext_csrf_token="{{csrf_token}}"; {# double quotes are important#}
-        ext_tag_list = "{{ ingredient_list | safe }}";
+        ext_csrf_token="{{csrf_token}}"; 
+        ext_ingredient_list = "{{ ingredient_list | safe }}";
     </script>
 {% endblock head%}
 {% block content %}
 <a href="{% url 'recipes:recipe_list' %}">Recipes list</a><br/>
 <a href="{% url 'recipes:ingredient_create' %}">New Ingredient</a><br/>
-
-    {% comment %} <form method="post">    {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save">
-    </form>   {% endcomment %}
     <div id="appcreate">
         <div token="{{csrf_token}}"></div>
         <appcreate></appcreate>
@@ -24,9 +19,6 @@
     {{ block.super }}
     <script>
         var ext_csrf_token = "{{ csrf_token }}"
-        {% comment %} var ext_form = `{{form.as_p | safe}}` {% endcomment %}
-        {% comment %} var ext_reminder_dict = {{ reminder_dict | safe }} {% endcomment %}
-        {% comment %} var ext_tag_list = {{ tag_list | json_script:"tag_list" }}  {% endcomment %}
         var ext_ingredient_list = {{ ingredient_list | safe }}
     </script>
     {% vite_hmr_client %}
